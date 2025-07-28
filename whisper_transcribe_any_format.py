@@ -34,7 +34,7 @@ def validate_audio_file(file_path):
     
     return True, "OK"
 
-def transcribe(audio_file, model_name="large", lang=None, file_id="unknown"):
+def transcribe(audio_file, model_name="medium", lang=None, file_id="unknown"):
     print(f"🧠 Lade Whisper-Modell: {model_name}")
     model = whisper.load_model(model_name)
 
@@ -101,15 +101,15 @@ def main():
     
     # Modellauswahl (optional)
     print("\n🧠 Whisper-Modell:")
-    print("   [Enter] = large (beste Qualität)")
+    print("   [Enter] = medium (gute Genauigkeit, Standard)")
     print("   tiny = Sehr schnell, weniger genau")
     print("   base = Schnell, grundlegende Genauigkeit")
     print("   small = Ausgewogen")
-    print("   medium = Gute Genauigkeit") 
-    print("   large = Beste Genauigkeit (Standard)")
+    print("   medium = Gute Genauigkeit (Standard)") 
+    print("   large = Beste Genauigkeit")
     
     model_input = input("Modell (optional): ").strip().lower()
-    model = model_input if model_input in ['tiny', 'base', 'small', 'medium', 'large'] else 'large'
+    model = model_input if model_input in ['tiny', 'base', 'small', 'medium', 'large'] else 'medium'
     
     print(f"\n🚀 Starte Transkription mit Modell '{model}'...")
     

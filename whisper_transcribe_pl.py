@@ -51,7 +51,7 @@ def download_audio(youtube_url, output_path):
         print(f"Fehlerausgabe: {e.stderr}")
         return False
 
-def transcribe(audio_file, model_name="large", lang="pl", video_id="unknown"):
+def transcribe(audio_file, model_name="medium", lang="pl", video_id="unknown"):
     print(f"🧠 Lade Whisper-Modell: {model_name}")
     model = whisper.load_model(model_name)
 
