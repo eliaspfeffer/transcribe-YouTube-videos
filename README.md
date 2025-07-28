@@ -1,30 +1,42 @@
-# YouTube Video Transcription Tool
+# 🎬 YouTube Video Transcription Tool mit Sprechererkennung
 
-A Python script that downloads audio from YouTube videos and transcribes them to text using OpenAI's Whisper model. The tool is specifically configured for Polish language transcription but can be adapted for other languages.
+Ein leistungsstarkes Python-Tool, das Audio aus YouTube-Videos herunterlädt und mit **OpenAI Whisper** transkribiert. **NEU:** Automatische **Sprechererkennung** mit pyannote.audio - erkenne wer gerade spricht!
 
-## Features
+## ✨ Features
 
-- Download audio from YouTube videos using `yt-dlp`
-- Transcribe audio to text using OpenAI Whisper
-- Automatic cleanup of temporary audio files
-- Unique transcript file naming with video ID and timestamp
-- Polish language transcription by default
-- File size validation and error handling
+- 📥 **YouTube Audio Download** mit `yt-dlp`
+- 🧠 **KI-Transkription** mit OpenAI Whisper (alle Modelle verfügbar)
+- 🎭 **Sprechererkennung** - Identifiziert verschiedene Sprecher automatisch
+- ⏰ **Optionale Zeitstempel** - An/Aus nach Wunsch
+- 🌍 **Multi-Language Support** (Standard: Polnisch)
+- 🚀 **GPU-Beschleunigung** für schnellere Verarbeitung
+- 🧹 **Automatische Cleanup** von temporären Dateien
+- 📝 **Intelligente Formatierung** mit Leerzeilen zwischen Sprechern
 
-## Prerequisites
+## 📋 Beispiel-Ausgabe
 
-- Python 3.7 or higher
-- `yt-dlp` (for YouTube audio downloading)
-- `ffmpeg` (required by yt-dlp for audio processing)
+**Mit Sprechererkennung:**
 
-### Installing System Dependencies
-
-**macOS (using Homebrew):**
-
-```bash
-brew install ffmpeg
-brew install yt-dlp
 ```
+=== TRANSKRIPT MIT SPRECHERERKENNUNG ===
+
+SPEAKER_00: Witam wszystkich na naszym kanale YouTube
+SPEAKER_01: Dzisiaj będziemy rozmawiać o sztucznej inteligencji
+
+SPEAKER_00: To bardzo fascynujący temat
+SPEAKER_01: Zgadzam się, szczególnie w kontekście...
+```
+
+**Mit Zeitstempeln:**
+
+```
+[02:15 - 02:22] SPEAKER_00: Witam wszystkich na naszym kanale YouTube
+[02:23 - 02:30] SPEAKER_01: Dzisiaj będziemy rozmawiać o...
+```
+
+## 🛠️ Installation
+
+### System-Dependencies
 
 **Ubuntu/Debian:**
 
@@ -34,113 +46,175 @@ sudo apt install ffmpeg
 sudo apt install yt-dlp
 ```
 
+**macOS (Homebrew):**
+
+```bash
+brew install ffmpeg
+brew install yt-dlp
+```
+
 **Windows:**
 
-- Download ffmpeg from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
-- Download yt-dlp from [https://github.com/yt-dlp/yt-dlp](https://github.com/yt-dlp/yt-dlp)
-- Add both to your system PATH
+- Installiere [ffmpeg](https://ffmpeg.org/download.html)
+- Installiere [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
-## Installation
-
-1. Clone or download this repository
-2. Set up the virtual environment and install Python dependencies:
+### Python-Setup
 
 ```bash
-# Make the setup script executable
-chmod +x setup_venv.sh
+# Repository klonen
+git clone <repository-url>
+cd transcribe-YouTube-videos
 
-# Run the setup script
-./setup_venv.sh
-```
-
-Or manually:
-
-```bash
-# Create virtual environment
+# Virtual Environment erstellen
 python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
-# Activate virtual environment
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install dependencies
+# Dependencies installieren
 pip install -r requirements.txt
+
+# Für Sprechererkennung zusätzlich:
+pip install pyannote.audio
 ```
 
-## Usage
+### 🔑 Hugging Face Setup (für Sprechererkennung)
 
-1. Activate the virtual environment:
+1. **Account erstellen:** [huggingface.co](https://huggingface.co)
+
+2. **Access Token erstellen:**
+
+   - Gehe zu [Settings → Access Tokens](https://huggingface.co/settings/tokens)
+   - **Token type:** `Read`
+   - **Permissions:** `Read access to contents of all public gated repos you can access`
+
+3. **Nutzungsbedingungen akzeptieren:**
+
+   - Besuche: [pyannote/speaker-diarization-3.1](https://hf.co/pyannote/speaker-diarization-3.1)
+   - Klicke "Accept and access repository"
+
+4. **Login:**
+   ```bash
+   huggingface-cli login
+   # Oder: hf auth login
+   ```
+
+## 🚀 Verwendung
 
 ```bash
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
+# Virtual Environment aktivieren
+source .venv/bin/activate
 
-2. Run the script:
-
-```bash
+# Script starten
 python whisper_transcribe_pl.py
 ```
 
-3. Enter the YouTube URL when prompted
+**Interaktive Konfiguration:**
 
-4. The script will:
-   - Download the audio from the YouTube video
-   - Transcribe it using Whisper
-   - Save the transcript as a text file with format: `transkript_{video_id}_{timestamp}.txt`
+```
+🎬 YouTube Video Transkriptionstool mit Sprechererkennung
+============================================================
+🔗 Gib den YouTube-Link ein: https://youtu.be/VIDEO_ID
 
-## Configuration
+⚙️  Konfiguration:
+🎭 Sprechererkennung verwenden? (j/N): j
+⏰ Zeitstempel einbinden? (j/N): N
 
-### Language Settings
-
-The script is configured for Polish (`pl`) by default. To change the language, modify the `lang` parameter in the `transcribe` function call:
-
-```python
-transcribe(audio_path, video_id=video_id, lang="en")  # For English
+🧠 Verfügbare Whisper-Modelle:
+   tiny (schnell, weniger genau)
+   small (ausgewogen)
+   medium (empfohlen)
+   large (sehr genau, langsam)
+Modell wählen (Enter für 'medium'):
 ```
 
-### Whisper Model
+## ⚙️ Konfiguration
 
-The script uses the "large" Whisper model by default for best accuracy. You can change this to a smaller model for faster processing:
+### Whisper-Modelle
 
-- `tiny`: Fastest, least accurate
-- `base`: Fast, basic accuracy
-- `small`: Balanced speed/accuracy
-- `medium`: Good accuracy, slower
-- `large`: Best accuracy, slowest
+| Modell   | Geschwindigkeit | Genauigkeit | Empfehlung               |
+| -------- | --------------- | ----------- | ------------------------ |
+| `tiny`   | ⚡⚡⚡⚡        | ⭐          | Sehr schnelle Tests      |
+| `small`  | ⚡⚡⚡          | ⭐⭐        | Schnelle Verarbeitung    |
+| `medium` | ⚡⚡            | ⭐⭐⭐      | **Standard (empfohlen)** |
+| `large`  | ⚡              | ⭐⭐⭐⭐    | Beste Qualität           |
 
-Change the model in the `transcribe` function call:
+### Sprachen
 
-```python
-transcribe(audio_path, model_name="medium", video_id=video_id)
-```
+Standardmäßig auf **Polnisch** (`pl`) konfiguriert. Andere Sprachen:
 
-## Output
+- `en` - Englisch
+- `de` - Deutsch
+- `fr` - Französisch
+- `es` - Spanisch
+- etc.
 
-- Transcript files are saved in the current directory with the format: `transkript_{video_id}_{timestamp}.txt`
-- Temporary audio files are stored in `temp_audio/` directory and cleaned up automatically
-- Console output provides progress updates and status information
+### GPU-Beschleunigung
 
-## Troubleshooting
+- **Automatische CUDA-Erkennung** für Whisper und pyannote.audio
+- Deutlich schnellere Verarbeitung mit kompatiblen NVIDIA-GPUs
+- Fallback auf CPU falls keine GPU verfügbar
 
-### Common Issues
+## 📁 Ausgabe
 
-1. **"yt-dlp not found"**: Make sure yt-dlp is installed and available in your system PATH
-2. **"ffmpeg not found"**: Install ffmpeg as described in the prerequisites
-3. **Small audio file warning**: The downloaded audio file is very small, which might indicate a download failure
-4. **Permission errors**: Make sure you have write permissions in the current directory
+- **Transkript:** `transkript_{video_id}_{timestamp}.txt`
+- **Temporäre Dateien:** `temp_audio/` (automatisch bereinigt)
+- **Eindeutige Dateinamen** verhindern Überschreibungen
 
-### Dependencies Not Installing
+## ❗ Troubleshooting
 
-If you encounter issues with installing the Python dependencies, try:
+### Häufige Probleme
+
+**Sprechererkennung fehlgeschlagen:**
 
 ```bash
-pip install --upgrade pip
-pip install --no-cache-dir -r requirements.txt
+# Prüfe Hugging Face Login
+hf auth whoami
+
+# Nochmal einloggen falls nötig
+hf auth login
 ```
 
-## License
+**"yt-dlp not found":**
 
-This project is provided as-is for educational and personal use. Please respect YouTube's terms of service when using this tool.
+```bash
+# Installation prüfen
+which yt-dlp
+pip install yt-dlp
+```
 
-## Contributing
+**GPU-Probleme:**
 
-Feel free to submit issues or pull requests to improve this tool.
+- Script fällt automatisch auf CPU zurück
+- Keine Aktion erforderlich
+
+**Sehr kleine Audio-Datei:**
+
+- Möglicherweise ist das Video privat/gelöscht
+- Prüfe YouTube-URL
+
+### Performance-Tipps
+
+- **GPU verwenden** für deutlich schnellere Verarbeitung
+- **Kleinere Whisper-Modelle** für schnellere Tests
+- **Sprechererkennung deaktivieren** für einfache Transkription
+
+## 🔄 Updates
+
+```bash
+# Dependencies aktualisieren
+pip install --upgrade whisper pyannote.audio
+
+# Neueste Whisper-Modelle laden
+python -c "import whisper; whisper.load_model('medium')"
+```
+
+## 📄 Lizenz
+
+Dieses Projekt steht für Bildungs- und persönliche Zwecke zur Verfügung. Bitte respektiere YouTubes Nutzungsbedingungen.
+
+## 🤝 Contributing
+
+Issues und Pull Requests sind willkommen!
+
+---
+
+**💡 Tipp:** Starte mit Sprechererkennung AUS und Zeitstempel AUS für die ersten Tests, dann erweitere die Funktionen nach Bedarf.
